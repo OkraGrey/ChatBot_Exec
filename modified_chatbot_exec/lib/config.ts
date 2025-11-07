@@ -13,7 +13,7 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
   {
     label: "Create a Reskilling plan for me",
     prompt:
-      "I'm a sales professional with ~2–3 years' experience (CRM/Salesforce, Excel, basic SQL) in B2B. I'm want to transition in to data science and want a clear, beginner-friendly 12-week roadmap. Please also design one end-to-end portfolio project relevant to sales, step-by-step tasks, expected deliverables, and interview talking points.",
+      "I’m a sales professional with ~2–3 years’ experience (CRM/Salesforce, Excel, basic SQL) in B2B. I’m want to transition in to data science and want a clear, beginner-friendly 12-week roadmap. Please also design one end-to-end portfolio project relevant to sales, step-by-step tasks, expected deliverables, and interview talking points.",
     icon: "circle-question",
   },
   {
