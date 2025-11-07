@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 import { ChatKitPanel, type FactAction } from "@/components/ChatKitPanel";
 import type { ColorScheme } from "@/hooks/useColorScheme";
+import Image from "next/image";
 
 export default function App() {
   // Force the colour scheme to light mode regardless of system settings. We
@@ -26,8 +27,23 @@ export default function App() {
   const handleThemeRequest = useCallback((_: ColorScheme) => {}, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-end">
+    <main 
+      className="flex min-h-screen flex-col items-center justify-end"
+      style={{
+        background: "linear-gradient(90deg, rgba(113, 134, 191, 1) 1%, rgba(255, 255, 255, 1) 45%, rgba(242, 242, 220, 1) 93%)"
+      }}
+    >
       <div className="mx-auto w-full max-w-5xl">
+        <div className="flex items-center gap-4 mb-6 px-4">
+          <Image
+            src="/challenger-logo.png"
+            alt="Challenger Logo"
+            width={60}
+            height={60}
+            className="rounded-lg"
+          />
+          <h1 className="text-3xl font-bold text-gray-800">Challenger Bot</h1>
+        </div>
         <ChatKitPanel
           theme={scheme}
           onWidgetAction={handleWidgetAction}

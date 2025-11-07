@@ -347,12 +347,10 @@ export function ChatKitPanel({
   return (
     <div
       className="relative mb-[10px] flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors"
-      // Apply our CSS variables for background and foreground colours so the
-      // panel matches the rest of the page. Tailwind can't read CSS variables
-      // from config at build time, so we set them inline.
+      // Keep the chat panel pure white
       style={{
-        backgroundColor: "var(--background)",
-        color: "var(--foreground)",
+        backgroundColor: "#ffffff",
+        color: "#000000",
       }}
     >
       <ChatKit
