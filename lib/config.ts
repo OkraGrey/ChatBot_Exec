@@ -41,30 +41,25 @@ export const PLACEHOLDER_INPUT = "Ask anything...";
 export const GREETING = "Looking for a career switch? Let's chat!";
 
 /**
- * Returns a ChatKit theme configuration inspired by the Challenger, Gray &
- * Christmas branding. The colours used here mirror the vivid blue and warm
- * yellow seen on their website. In light mode the primary accent is a
- * vibrant blue used for interactive elements, while dark mode swaps the
- * accent for a soft golden yellow. The grayscale settings have also been
- * adjusted to increase contrast and legibility across both themes.
+ * Returns a ChatKit theme configuration. We define a consistent accent
+ * colour across both light and dark modes because the client requested to
+ * disable automatic night mode switching. The accent remains the same
+ * regardless of the current colour scheme and uses the project's primary
+ * blue (#0044FF) and secondary yellow (#E7E697) tokens. The grayscale
+ * configuration stays unchanged to preserve contrast.
  */
 export const getThemeConfig = (theme: ColorScheme): ThemeOption => ({
   color: {
     grayscale: {
       hue: 220,
-      // A lower tint value produces slightly more saturated light greys which
-      // prevents white‑on‑blue text from appearing washed out.
       tint: 6,
-      // Use a modest shade adjustment to ensure adequate contrast on dark
-      // surfaces without making the UI feel too heavy.
       shade: theme === "dark" ? -3 : -2,
     },
     accent: {
-      // In light mode use a bright royal blue for interactive elements and
-      // highlights. In dark mode switch to a rich golden yellow to stand out
-      // against the navy backgrounds defined in globals.css. These hex codes
-      // were sampled from the Challenger Gray hero banner.
-      primary: theme === "dark" ? "#F5D742" : "#0044FF",
+      // Always use our blue accent in light mode and the supplied yellow
+      // accent in dark mode. Although dark mode is disabled, we keep the
+      // property here for completeness.
+      primary: theme === "dark" ? "#E7E697" : "#0044FF",
       level: 1,
     },
   },

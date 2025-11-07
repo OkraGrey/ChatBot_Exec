@@ -63,26 +63,8 @@ export function ChatKitPanel({
   const [widgetInstanceKey, setWidgetInstanceKey] = useState(0);
 
   // Track whether the assistant is currently generating a reply. This state
-  // drives the display of the loader overlay and cycling status messages.
+  // drives the display of the typing indicator below the last user message.
   const [isThinking, setIsThinking] = useState(false);
-  const [statusIndex, setStatusIndex] = useState(0);
-  const statusMessages = [
-    "Crafting solutions...",
-    "Going in depth...",
-    "Tailoring to your demand...",
-  ];
-
-  // Cycle through the status messages every few seconds while thinking.
-  useEffect(() => {
-    if (!isThinking) {
-      setStatusIndex(0);
-      return;
-    }
-    const id = window.setInterval(() => {
-      setStatusIndex((prev) => (prev + 1) % statusMessages.length);
-    }, 3000);
-    return () => window.clearInterval(id);
-  }, [isThinking, statusMessages.length]);
 
   const setErrorState = useCallback((updates: Partial<ErrorState>) => {
     setErrors((current) => ({ ...current, ...updates }));
@@ -337,12 +319,12 @@ export function ChatKitPanel({
       return { success: false };
     },
     onResponseEnd: () => {
-      // Hide the loader overlay and reset state when the assistant finishes.
+      // Hide the typing indicator when the assistant finishes.
       setIsThinking(false);
       onResponseEnd();
     },
     onResponseStart: () => {
-      // Clear any previous integration errors and show the loader overlay.
+      // Clear any previous integration errors and show the typing indicator.
       setErrorState({ integration: null, retryable: false });
       setIsThinking(true);
     },
@@ -389,27 +371,12 @@ export function ChatKitPanel({
             : "block h-full w-full"
         }
       />
-      {/* Overlay loader that appears while the assistant is working. */}
+      {/* Simple three‑dot typing indicator anchored below the conversation. */}
       {isThinking && (
-        <div
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
-        >
-          <div
-            className="mb-4 animate-spin rounded-full"
-            style={{
-              border: `4px solid var(--foreground)`,
-              borderTopColor: "transparent",
-              width: "48px",
-              height: "48px",
-            }}
-          />
-          <p
-            className="text-center font-semibold"
-            style={{ color: "var(--foreground)" }}
-          >
-            {statusMessages[statusIndex]}
-          </p>
+        <div className="absolute left-6 top-20 z-20 flex space-x-2">
+          <span className="chat-dot" />
+          <span className="chat-dot" />
+          <span className="chat-dot" />
         </div>
       )}
       <ErrorOverlay

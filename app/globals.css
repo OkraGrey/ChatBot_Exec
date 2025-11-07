@@ -2,36 +2,26 @@
 
 /*
   Global CSS variables define the colour palette for the entire application. The
-  values chosen below are based on the Challenger, Gray & Christmas website.
-  Light mode features a vivid blue background with golden text, while dark mode
-  uses a deep navy backdrop and retains the golden foreground. These
-  variables are consumed throughout the app via CSS variables and inline
-  styles.
+  values below come directly from the user's specification: a bright royal
+  blue (#0044FF) and a soft yellow (#E7E697). Dark mode definitions are still
+  present but use the same colours because night mode has been disabled in the
+  application. The --accent-color variable is used for loaders and other
+  interactive accents.
 */
 :root {
-  /* Primary background colour used in light mode */
   --background: #0044ff;
-  /* Primary foreground colour used in light mode (golden yellow) */
-  --foreground: #f5d742;
+  --foreground: #e7e697;
+  --accent-color: #0044ff;
   color-scheme: light;
 }
 
-/* Override colours when the user selects dark mode via system settings or
-   ChatKit's theme switcher. */
+/* Even if dark mode is selected on the system or via ChatKit, the colours
+   remain identical. This prevents any automatic shift to night mode. */
 :root[data-color-scheme="dark"] {
-  --background: #001f3f;
-  --foreground: #f5d742;
-  color-scheme: dark;
-}
-
-/* Respect the user's system preference when no explicit colour scheme is
-   selected. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-color-scheme]) {
-    --background: #001f3f;
-    --foreground: #f5d742;
-    color-scheme: dark;
-  }
+  --background: #0044ff;
+  --foreground: #e7e697;
+  --accent-color: #0044ff;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -49,6 +39,40 @@
 openai-chatkit pre,
 openai-chatkit details {
   display: none !important;
+}
+
+/* Typing indicator (three dots) animation. Each dot moves up and down at
+   different times to create a pulsing effect. Colour is bound to
+   --accent-color so it matches the brand palette. */
+@keyframes chat-dot {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
+
+.chat-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  animation: chat-dot 1.4s infinite both;
+}
+
+.chat-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.chat-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.chat-dot:nth-child(3) {
+  animation-delay: 0s;
 }
 
 body {
