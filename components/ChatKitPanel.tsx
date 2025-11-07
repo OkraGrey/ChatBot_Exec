@@ -52,6 +52,7 @@ export function ChatKitPanel({
   const processedFacts = useRef(new Set<string>());
   const [errors, setErrors] = useState<ErrorState>(() => createInitialErrors());
   const [isInitializingSession, setIsInitializingSession] = useState(true);
+  const [isResponding, setIsResponding] = useState(false);
   const isMountedRef = useRef(true);
   const [scriptStatus, setScriptStatus] = useState<
     "pending" | "ready" | "error"
@@ -315,11 +316,13 @@ export function ChatKitPanel({
       return { success: false };
     },
     onResponseEnd: () => {
+      setIsResponding(false);
       onResponseEnd();
     },
     onResponseStart: () => {
       // Clear any previous integration errors when a new response starts.
       setErrorState({ integration: null, retryable: false });
+      setIsResponding(true);
     },
     onThreadChange: () => {
       processedFacts.current.clear();
@@ -346,32 +349,40 @@ export function ChatKitPanel({
 
   return (
     <div
-      className="relative mb-[10px] flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors"
-      // Keep the chat panel pure white
-      style={{
-        backgroundColor: "#ffffff",
-        color: "#000000",
-      }}
+      className={`relative mb-[10px] rounded-2xl ${
+        isResponding ? "chat-loading-border" : ""
+      }`}
     >
-      <ChatKit
-        key={widgetInstanceKey}
-        control={chatkit.control}
-        className={
-          blockingError || isInitializingSession
-            ? "pointer-events-none opacity-0"
-            : "block h-full w-full"
-        }
-      />
-      <ErrorOverlay
-        error={blockingError}
-        fallbackMessage={
-          blockingError || !isInitializingSession
-            ? null
-            : "Loading assistant session..."
-        }
-        onRetry={blockingError && errors.retryable ? handleResetChat : null}
-        retryLabel="Restart chat"
-      />
+      <div
+        className="relative flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors z-10"
+        // Keep the chat panel pure white
+        style={{
+          backgroundColor: "#ffffff",
+          color: "#000000",
+        }}
+      >
+        <ChatKit
+          key={widgetInstanceKey}
+          control={chatkit.control}
+          className={
+            blockingError || isInitializingSession
+              ? "pointer-events-none opacity-0"
+              : "block h-full w-full relative z-10"
+          }
+        />
+        <div className="relative z-10">
+          <ErrorOverlay
+            error={blockingError}
+            fallbackMessage={
+              blockingError || !isInitializingSession
+                ? null
+                : "Loading assistant session..."
+            }
+            onRetry={blockingError && errors.retryable ? handleResetChat : null}
+            retryLabel="Restart chat"
+          />
+        </div>
+      </div>
     </div>
   );
 }
