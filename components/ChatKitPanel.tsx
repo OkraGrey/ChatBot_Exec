@@ -62,10 +62,6 @@ export function ChatKitPanel({
   );
   const [widgetInstanceKey, setWidgetInstanceKey] = useState(0);
 
-  // Track whether the assistant is currently generating a reply. This state
-  // drives the display of the typing indicator below the last user message.
-  const [isThinking, setIsThinking] = useState(false);
-
   const setErrorState = useCallback((updates: Partial<ErrorState>) => {
     setErrors((current) => ({ ...current, ...updates }));
   }, []);
@@ -319,14 +315,11 @@ export function ChatKitPanel({
       return { success: false };
     },
     onResponseEnd: () => {
-      // Hide the typing indicator when the assistant finishes.
-      setIsThinking(false);
       onResponseEnd();
     },
     onResponseStart: () => {
-      // Clear any previous integration errors and show the typing indicator.
+      // Clear any previous integration errors when a new response starts.
       setErrorState({ integration: null, retryable: false });
-      setIsThinking(true);
     },
     onThreadChange: () => {
       processedFacts.current.clear();
@@ -353,7 +346,7 @@ export function ChatKitPanel({
 
   return (
     <div
-      className="relative pb-8 flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors"
+      className="relative mb-[10px] flex h-[90vh] w-full rounded-2xl flex-col overflow-hidden shadow-sm transition-colors"
       // Apply our CSS variables for background and foreground colours so the
       // panel matches the rest of the page. Tailwind can't read CSS variables
       // from config at build time, so we set them inline.
@@ -371,14 +364,6 @@ export function ChatKitPanel({
             : "block h-full w-full"
         }
       />
-      {/* Simple three‑dot typing indicator anchored below the conversation. */}
-      {isThinking && (
-        <div className="absolute left-6 top-20 z-20 flex space-x-2">
-          <span className="chat-dot" />
-          <span className="chat-dot" />
-          <span className="chat-dot" />
-        </div>
-      )}
       <ErrorOverlay
         error={blockingError}
         fallbackMessage={
